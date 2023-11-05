@@ -1,1 +1,1 @@
-python3 -m flask run
+python3 -m flask run --host localhost --port 8000
