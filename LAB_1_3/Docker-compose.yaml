@@ -1,0 +1,31 @@
+#https://github.com/felipewom/docker-compose-postgres
+services:
+  application:
+    build:        ./application/
+    restart:      always #might be bad choice
+    command:      sh -c "sleep 10s ; python3 ./app.py" #Waiter script
+    ports:
+      - 8000:8000
+    stop_signal:  SIGINT     #flask requirement
+    environment:
+      FLASK_SERVER_PORT: '8000'
+    volumes:
+      - ./app:/src
+    depends_on:
+      - database
+  
+  database:
+    build:        ./database/
+    restart:      always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres # The PostgreSQL user (useful to connect to the database)
+      POSTGRES_PASSWORD: postgres # The PostgreSQL password (useful to connect to the database)
+      POSTGRES_DB: default_database # The PostgreSQL default database (automatically created at first launch
+    #Share folder with container to persist data
+    volumes:
+      - ./db_data_persistent/:/var/lib/postgresql/data/
+      #Initialize data first time container is run
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      
