@@ -24,12 +24,12 @@ def data():
     data=""
     try:
         cursor = connection.cursor()
-        cursor.execute("SELECT * FROM data_table")
+        cursor.execute("SELECT * FROM Examples")
         data=cursor.fetchall()
         connection.close()
-    except:
-        data="Error connecting to database"
+    except Exception as ex:
+        data=ex #"Error connecting to database"
     return data
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=8000)
